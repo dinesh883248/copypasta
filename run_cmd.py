@@ -41,8 +41,8 @@ def sigwinch_passthrough(p, sig, data):
 
 def pexpect_spawn(cmd):
     p = pexpect.spawnu(cmd, timeout=None, logfile=sys.stdout)
-    p.setwinsize(*get_terminal_size())
-    signal.signal(signal.SIGWINCH, partial(sigwinch_passthrough, p))
+    # p.setwinsize(*get_terminal_size())
+    # signal.signal(signal.SIGWINCH, partial(sigwinch_passthrough, p))
     output = ""
     while True:
         line = p.readline()
