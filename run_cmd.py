@@ -6,7 +6,7 @@ from functools import partial
 import pexpect
 
 
-def run_cmd(cmd):
+def run_cmd_check_output(cmd):
     cmd = shlex.split(cmd)
     output = subprocess.check_output(cmd, timeout=120)
     output = output.decode().strip()
@@ -52,7 +52,7 @@ def pexpect_spawn(cmd):
         output += line
 
 
-def run_cmd_pexpect(cmd):
+def run_cmd(cmd):
     exit_code, output = pexpect_spawn(cmd)
     if exit_code != 0:
         error = "'%s' - command returned non-zero exit code" % cmd
