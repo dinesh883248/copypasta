@@ -166,11 +166,20 @@ def execute(cmd, tmp_file) -> Any:
 
 
 def run_cmd(cmd):
-    t = tempfile.NamedTemporaryFile(suffix='.cast', delete=False)
-    code = execute(cmd, t.name)
+    exit_code_file = tempfile.NamedTemporaryFile(suffix=".exit_code", delete=False)
+    cmd += "\necho $? > %s" % exit_code_file.name
+    t = tempfile.NamedTemporaryFile(suffix=".cast", delete=False)
+    execute(cmd, t.name)
+
     with open(t.name, "r") as f:
         out = f.read()
     os.unlink(t.name)
+
+    with open(exit_code_file.name, "r") as f:
+        exit_code = f.read()
+        exit_code = int(exit_code.strip())
+    os.unlink(exit_code_file.name)
+
     ansi_escape = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
     out = ansi_escape.sub("", out.strip())
-    return code, out
+    return exit_code, out
