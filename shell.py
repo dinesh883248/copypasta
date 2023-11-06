@@ -177,7 +177,11 @@ def run_cmd(cmd):
 
     with open(exit_code_file.name, "r") as f:
         exit_code = f.read()
+    if exit_code == '':
+        exit_code = 1
+    else:
         exit_code = int(exit_code.strip())
+
     os.unlink(exit_code_file.name)
 
     ansi_escape = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
