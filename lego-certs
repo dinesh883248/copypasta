@@ -1,0 +1,2 @@
+export GOOGLE_DOMAINS_ACCESS_TOKEN=
+lego --email example@gmail.com --dns googledomains --domains example.com --domains two.example.com run
