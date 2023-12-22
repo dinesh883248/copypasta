@@ -1,5 +1,4 @@
 import shutil
-import re
 import os
 import time
 import uuid
