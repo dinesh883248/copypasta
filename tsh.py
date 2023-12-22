@@ -1,4 +1,5 @@
 import shutil
+import re
 import os
 import time
 import uuid
@@ -37,9 +38,9 @@ class TmuxSession:
     def extract_output(self, output, run_id):
         pivots = []
         for i, l in enumerate(output):
-            if l.strip() == run_id:
+            if run_id in l:
                 pivots.append(i)
-        output = "".join(output[pivots[0] + 1 : pivots[1]])
+        output = "".join(output[pivots[1] + 1 : pivots[2]])
         return output
 
     def run(self, cmd):
@@ -106,9 +107,9 @@ class TmuxPane:
     def extract_output(self, output, run_id):
         pivots = []
         for i, l in enumerate(output):
-            if l.strip() == run_id:
+            if run_id in l:
                 pivots.append(i)
-        output = "".join(output[pivots[0] + 1 : pivots[1]])
+        output = "".join(output[pivots[1] + 1 : pivots[2]])
         return output
 
     def run(self, cmd):
