@@ -1,147 +1,111 @@
-import shutil
 import os
-import time
+import atexit
 import uuid
 import subprocess
-from pathlib import Path
-from textwrap import dedent
 
 
-class TmuxSession:
+class TmuxBase:
     def __init__(self):
-        self.session_id = self.create_session()
-        self.pane_id = f"{self.session_id}:0.0"
+        self.unique_ps1 = f"tsh_{uuid.uuid4().hex}$ "
+        self.id = self.create()
+        self.pane_id = self.get_pane_id()
+        subprocess.run(
+            [
+                "tmux",
+                "send-keys",
+                "-t",
+                self.pane_id,
+                f'PS1="{self.unique_ps1}"; clear',
+                "C-m",
+            ]
+        )
+        atexit.register(self.remove)
 
-    def create_session(self):
+    def create(self):
+        raise NotImplementedError
+
+    def get_pane_id(self):
+        raise NotImplementedError
+
+    def exists(self):
+        raise NotImplementedError
+
+    def remove(self):
+        raise NotImplementedError
+
+    def remove_cmd(self, s):
+        i = s.find("\n")
+        if i != -1:
+            return s[i + 1 :]
+        return ""
+
+    def capture_pane(self):
+        captured_output = subprocess.check_output(
+            ["tmux", "capture-pane", "-p", "-t", self.pane_id], text=True
+        )
+        return captured_output
+
+    def get_recent_output(self, captured_output):
+        pat = self.unique_ps1.strip()
+        last_occurrence = captured_output.rfind(pat)
+        second_last_occurrence = captured_output.rfind(pat, 0, last_occurrence)
+        out = captured_output[
+            second_last_occurrence + len(pat) : last_occurrence
+        ].strip()
+        return self.remove_cmd(out)
+
+    def run(self, cmd, wait=True):
+        signal_name = f"{uuid.uuid4().hex}"
+        wrapped_command = f"{cmd}; tmux wait-for -S {signal_name}"
+        subprocess.run(
+            ["tmux", "send-keys", "-t", self.pane_id, wrapped_command, "C-m"]
+        )
+        if not wait:
+            return
+
+        subprocess.run(["tmux", "wait-for", signal_name])
+        captured_output = self.capture_pane()
+        recent_output = self.get_recent_output(captured_output)
+        return recent_output
+
+
+class TmuxSession(TmuxBase):
+    def create(self):
         session_id = uuid.uuid4().hex
-        subprocess.check_call(["tmux", "new-session", "-d", "-s", session_id])
+        subprocess.check_call(
+            ["tmux", "new-session", "-x", "200", "-d", "-s", session_id]
+        )
         return session_id
 
-    def remove(self):
-        subprocess.run(["tmux", "kill-session", "-t", self.session_id])
+    def get_pane_id(self):
+        return f"{self.id}:0.0"
 
-    def start_pipe(self, output_file):
+    def exists(self):
+        res = subprocess.run(["tmux", "has-session", "-t", self.id])
+        return res.returncode == 0
+
+    def remove(self):
         subprocess.run(
-            ["tmux", "pipe-pane", "-t", self.pane_id, f"cat > {output_file}"]
+            ["tmux", "kill-session", "-t", self.id], stderr=subprocess.DEVNULL
         )
 
-    def stop_pipe(self):
-        subprocess.run(["tmux", "pipe-pane", "-t", self.session_id])
 
-    def wait_for_completion(self, exit_code):
-        while True:
-            if Path(exit_code).is_file():
-                return
-            time.sleep(0.1)
-
-    def extract_output(self, output, run_id):
-        pivots = []
-        for i, l in enumerate(output):
-            if run_id in l:
-                pivots.append(i)
-        output = "".join(output[pivots[1] + 1 : pivots[2]])
-        return output
-
-    def run(self, cmd):
-        cwd = Path().resolve()
-        run_id = uuid.uuid4().hex
-        work_dir = f"{cwd}/.pysh/{run_id}"
-        Path(work_dir).mkdir(parents=True, exist_ok=True)
-        script_file = f"{work_dir}/script.sh"
-        exit_code = f"{work_dir}/exit_code"
-        output_file = f"{work_dir}/output.txt"
-
-        # setup logging and execute cmd
-        cmd = f"echo {run_id}; {cmd}; echo $? > {exit_code}; echo {run_id}"
-        with open(script_file, "w") as f:
-            f.write(cmd)
-        cmd = f"bash {script_file}"
-        cmd = dedent(cmd)
-        self.start_pipe(output_file)
-        subprocess.run(["tmux", "send-keys", "-t", self.pane_id, cmd, "C-m"])
-        self.wait_for_completion(exit_code)
-        self.stop_pipe()
-
-        # extract results
-        with open(exit_code, "r") as f:
-            exit_code = int(f.read().strip())
-        with open(output_file, "r") as f:
-            output = f.readlines()
-        output = self.extract_output(output, run_id)
-
-        # cleanup files
-        shutil.rmtree(work_dir)
-
-        return exit_code, output
-
-
-class TmuxPane:
-    def __init__(self):
-        self.pane_id = self.create_pane()
-
-    def create_pane(self):
+class TmuxPane(TmuxBase):
+    def create(self):
         pane_id = subprocess.check_output(
             ["tmux", "split-window", "-hdP", "-F", "#{pane_id}"], text=True
-        )
-        pane_id = pane_id.strip()
+        ).strip()
         return pane_id
 
+    def get_pane_id(self):
+        return self.id
+
+    def exists(self):
+        res = subprocess.run(["tmux", "list-panes", "-t", self.id])
+        return res.returncode == 0
+
     def remove(self):
-        subprocess.run(["tmux", "kill-pane", "-t", self.pane_id])
-
-    def start_pipe(self, output_file):
-        subprocess.run(
-            ["tmux", "pipe-pane", "-t", self.pane_id, f"cat > {output_file}"]
-        )
-
-    def stop_pipe(self):
-        subprocess.run(["tmux", "pipe-pane"])
-
-    def wait_for_completion(self, exit_code):
-        while True:
-            if Path(exit_code).is_file():
-                return
-            time.sleep(0.1)
-
-    def extract_output(self, output, run_id):
-        pivots = []
-        for i, l in enumerate(output):
-            if run_id in l:
-                pivots.append(i)
-        output = "".join(output[pivots[1] + 1 : pivots[2]])
-        return output
-
-    def run(self, cmd):
-        cwd = Path().resolve()
-        run_id = uuid.uuid4().hex
-        work_dir = f"{cwd}/.pysh/{run_id}"
-        Path(work_dir).mkdir(parents=True, exist_ok=True)
-        script_file = f"{work_dir}/script.sh"
-        exit_code = f"{work_dir}/exit_code"
-        output_file = f"{work_dir}/output.txt"
-
-        # setup logging and execute cmd
-        cmd = f"echo {run_id}; {cmd}; echo $? > {exit_code}; echo {run_id}"
-        with open(script_file, "w") as f:
-            f.write(cmd)
-        cmd = f"bash {script_file}"
-        cmd = dedent(cmd)
-        self.start_pipe(output_file)
-        subprocess.run(["tmux", "send-keys", "-t", self.pane_id, cmd, "C-m"])
-        self.wait_for_completion(exit_code)
-        self.stop_pipe()
-
-        # extract results
-        with open(exit_code, "r") as f:
-            exit_code = int(f.read().strip())
-        with open(output_file, "r") as f:
-            output = f.readlines()
-        output = self.extract_output(output, run_id)
-
-        # cleanup files
-        shutil.rmtree(work_dir)
-
-        return exit_code, output
+        subprocess.run(["tmux", "kill-pane", "-t", self.id], stderr=subprocess.DEVNULL)
 
 
 def get_shell():
@@ -155,10 +119,6 @@ def get_shell():
 
 def run_cmd(cmd):
     sh = get_shell()
-    e, o = sh.run(cmd)
-    if "TMUX" in os.environ:
-        print(f"Command failed with exit code: {exit_code}")
-        print(f"ctrl-c to debug..")
-        time.sleep(3)
+    output = sh.run(cmd)
     sh.remove()
-    return e, o
+    return output
