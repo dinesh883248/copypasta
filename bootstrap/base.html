@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collapsible Menu</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="custom.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container p-3">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="hstack gap-1 bg-light px-2">
+                    <div class="p-2">
+                        <a class="navbar-brand" href="#">
+                            <svg width="50px" height="50px" viewBox="0 0 1024 1024" class="icon" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M512 960c-92.8 0-160-200-160-448S419.2 64 512 64s160 200 160 448-67.2 448-160 448z m0-32c65.6 0 128-185.6 128-416S577.6 96 512 96s-128 185.6-128 416 62.4 416 128 416z"
+                                    fill="#050D42" />
+                                <path
+                                    d="M124.8 736c-48-80 92.8-238.4 307.2-363.2S852.8 208 899.2 288 806.4 526.4 592 651.2 171.2 816 124.8 736z m27.2-16c33.6 57.6 225.6 17.6 424-97.6S905.6 361.6 872 304 646.4 286.4 448 401.6 118.4 662.4 152 720z"
+                                    fill="#050D42" />
+                                <path
+                                    d="M899.2 736c-46.4 80-254.4 38.4-467.2-84.8S76.8 368 124.8 288s254.4-38.4 467.2 84.8S947.2 656 899.2 736z m-27.2-16c33.6-57.6-97.6-203.2-296-318.4S184 246.4 152 304 249.6 507.2 448 622.4s392 155.2 424 97.6z"
+                                    fill="#050D42" />
+                                <path
+                                    d="M512 592c-44.8 0-80-35.2-80-80s35.2-80 80-80 80 35.2 80 80-35.2 80-80 80zM272 312c-27.2 0-48-20.8-48-48s20.8-48 48-48 48 20.8 48 48-20.8 48-48 48zM416 880c-27.2 0-48-20.8-48-48s20.8-48 48-48 48 20.8 48 48-20.8 48-48 48z m448-432c-27.2 0-48-20.8-48-48s20.8-48 48-48 48 20.8 48 48-20.8 48-48 48z"
+                                    fill="#2F4BFF" />
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="p-2 ms-auto">
+                    </div>
+                    <div class="p-2 d-none d-md-block">
+                        <ul class="nav flex-row nav-pills">
+                            <li class="nav-item m-1">
+                                <a class="nav-link active" aria-current="page" href="#">Active</a>
+                            </li>
+                            <li class="nav-item m-1">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="p-2 d-block d-md-none">
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse"
+                            data-bs-target="#menuItems" aria-expanded="false" aria-controls="menuItems">
+                            <i class="bi bi-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Collapsible Menu Pane -->
+            <div class="col-md-3">
+                <div class="collapse navbar-collapse" id="menuItems">
+                    <div class="p-3 bg-light">
+                        <ul class="nav flex-column nav-pills">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#">Active</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Main Body Pane -->
+            <div class="col-md-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb p-3">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Library</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Data</li>
+                    </ol>
+                </nav>
+                <!-- Main content here -->
+                <div class="p-3">
+                    <h2>Main Content</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+                </div>
+            </div>
+
+            <!-- Ads/Notifications Pane -->
+            <div class="col-md-3">
+                <!-- Ads/notifications content here -->
+                <div class="p-3 bg-light">
+                    <h5>News/Ads</h5>
+                    <p>New updates!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="style.js"></script>
+</body>
+
+</html>
