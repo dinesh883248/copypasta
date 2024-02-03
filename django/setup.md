@@ -26,8 +26,16 @@ echo "export DJANGO_ENVIRONMENT=prod" >> .env
 ```
 4. setup git
 ```sh
+git init
 git config user.name dinesh
 git config user.email dinesh883248@gmail.com
+tee .gitignore <<EOF
+*.pyc
+__pycache__/
+*.swo
+*.swp
+sqlite3.db
+EOF
 git add --all
 git commit -m 'initial'
 ```
