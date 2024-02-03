@@ -24,7 +24,21 @@ cd "$PROJECT_NAME"
 django-admin startapp common
 echo "export DJANGO_ENVIRONMENT=prod" >> .env
 ```
-4. setup git
+4. setup pre-commit
+```sh
+. ../venv/bin/activate
+pip install pre-commit
+tee .pre-commit-config.yaml <<EOF
+repos:
+-   repo: https://github.com/ambv/black
+    rev: 23.12.1
+    hooks:
+    - id: black
+      language_version: python3.
+EOF
+pre-commit install
+```
+5. setup git
 ```sh
 git init
 git config user.name dinesh
@@ -36,10 +50,11 @@ __pycache__/
 *.swp
 sqlite3.db
 EOF
+pip freeze > requirements.txt
 git add --all
 git commit -m 'initial'
 ```
-5. update settings
+6. update settings
 - change debug from true to false.
 - add common to apps.
 - more updates below..
