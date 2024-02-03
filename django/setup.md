@@ -36,7 +36,6 @@ repos:
     - id: black
       language_version: python3.
 EOF
-pre-commit install
 ```
 5. setup git
 ```sh
@@ -50,6 +49,7 @@ __pycache__/
 *.swp
 sqlite3.db
 EOF
+pre-commit install
 pip freeze > requirements.txt
 git add --all
 git commit -m 'initial'
