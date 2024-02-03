@@ -61,7 +61,8 @@ git commit -m 'initial'
 - add common to apps.
 - more updates below..
 ```sh
-tee -a "$PROJECT_NAME" <<EOF
+tee -a "$PROJECT_NAME"/settings.py <<EOF
+
 STATIC_ROOT = BASE_DIR / "static"
 
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
