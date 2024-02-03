@@ -53,6 +53,8 @@ pre-commit install
 pip freeze > requirements.txt
 git add --all
 git commit -m 'initial'
+git add --all
+git commit -m 'initial'
 ```
 6. update settings
 - change debug from true to false.
