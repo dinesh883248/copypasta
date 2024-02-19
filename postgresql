@@ -1,7 +1,6 @@
 # create db with admin user.
-```sh
 read -p "Enter username: " username && read -p "Enter database name: " db_name && read -s -p "Enter password: " password && echo && createdb $db_name && psql -c "CREATE USER $username WITH PASSWORD '$password';" && psql -c "GRANT ALL PRIVILEGES ON DATABASE $db_name TO $username;" && psql -c "ALTER USER $username WITH SUPERUSER;"
-```
+
 
 # create user
 su - postgres
