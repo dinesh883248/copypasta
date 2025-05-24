@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Table</title>
+    <style>
+        * {
+            outline: 1px solid tomato;
+        }
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+        body {
+            margin: auto;
+        }
+        table {
+            text-align: left;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body style="width: 480px;">
+    <table style="width: 480px;">
+        <colgroup>
+            <col style="width: 96px;">
+            <col style="width: 96px;">
+            <col style="width: 96px;">
+            <col style="width: 96px;">
+            <col style="width: 96px;">
+        </colgroup>
+        <tr>
+            <td>Fleet</td>
+            <td></td>
+            <td>Settings</td>
+            <td>Signin</td>
+            <td>Signout</td>
+        </tr>
+    </table>
+
+    <table style="width: 480px;">
+        <colgroup>
+            <col style="width: 480px;">
+        </colgroup>
+        <tr>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+
+    <table style="width: 480px;">
+        <colgroup>
+            <col style="width: 120px;">
+            <col style="width: 120px;">
+            <col style="width: 240px;">
+        </colgroup>
+        <tr>
+            <td>Row 1, Cell 1</td>
+            <td>Row 1, Cell 2</td>
+            <td>
+                <table style="width: 240px;">
+                    <colgroup>
+                        <col style="width: 120px;">
+                        <col style="width: 120px;">
+                    </colgroup>
+                    <tr>
+                        <td>Row 1, Cell 1</td>
+                        <td>Row 1, Cell 2</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>Row 2, Cell 1</td>
+            <td>Row 2, Cell 2</td>
+            <td>Row 2, Cell 3</td>
+        </tr>
+    </table>
+</body>
+</html>
