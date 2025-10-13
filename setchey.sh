@@ -55,6 +55,13 @@ _fzf_nvim() {
 bind -x '"\C-p": _fzf_nvim'
 
 mkcd () { mkdir -p -- "$1" && cd -- "$1"; }
+
+mkenv () {
+  python3 -m venv .venv
+  . .venv/bin/activate \
+  && pip install -U pip uv \
+  && uv pip install notebook jupytext
+}
 BASHRC
 
 # ====================================================================
