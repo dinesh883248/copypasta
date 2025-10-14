@@ -18,7 +18,7 @@ if [ -z "$PRIVATE_KEY_PATH" ]; then
   PRIVATE_KEY_PATH="~/.ssh/id_rsa"
 fi
 
-rsync -azP -e "ssh -i $PRIVATE_KEY_PATH" run-notebook.sh $USER@$REMOTE_IP:/home/$USER/install-notebook.sh
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -i $PRIVATE_KEY_PATH $USER@$REMOTE_IP "cd /home/$USER/ && wget https://raw.githubusercontent.com/dinesh883248/copypasta/refs/heads/master/remote-notebook/install-notebook.sh"
 
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -i $PRIVATE_KEY_PATH $USER@$REMOTE_IP "chmod +x /home/$USER/install-notebook.sh"
 
