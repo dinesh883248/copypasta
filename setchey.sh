@@ -5,7 +5,7 @@ set -e
 # INSTALL COMMON PKGS
 # ====================================================================
 sudo apt-get update
-sudo apt-get install -y neovim wget curl net-tools dnsutils dig socat netcat-openbsd tree python3-venv git zip unzip fzf ripgrep
+sudo apt-get install -y neovim wget curl net-tools dnsutils socat netcat-openbsd tree python3-venv git zip unzip fzf ripgrep
 
 # ====================================================================
 # SETUP BASHRC
@@ -15,6 +15,9 @@ cat <<'BASHRC' > ~/.bashrc
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
+
+# Setup PS1
+export PS1="[\u@\h \W]\$ "
 
 # User specific environment
 if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
