@@ -1,1 +1,46 @@
+# DWM-style workspaces as kitty tabs.
+enabled_layouts tall:bias=50;full_size=1;mirrored=false,stack,grid
+layout tall
+cd ~
+launch /opt/homebrew/bin/bash
+
+new_tab 2
+layout tall
+cd ~
+launch /opt/homebrew/bin/bash
+
+new_tab 3
+layout tall
+cd ~
+launch /opt/homebrew/bin/bash
+
+new_tab 4
+layout tall
+cd ~
+launch /opt/homebrew/bin/bash
+
+new_tab 5
+layout tall
+cd ~
+launch /opt/homebrew/bin/bash
+
+new_tab 6
+layout tall
+cd ~
+launch /opt/homebrew/bin/bash
+
+new_tab 7
+layout tall
+cd ~
+launch /opt/homebrew/bin/bash
+
+new_tab 8
+layout tall
+cd ~
+launch /opt/homebrew/bin/bash
+
+new_tab 9
+layout tall
+cd ~
+launch /opt/homebrew/bin/bash
 
