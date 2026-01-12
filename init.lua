@@ -41,12 +41,12 @@ require("lazy").setup({
   },
 
   -- GitHub Copilot
-  {
-    "github/copilot.vim",
-    config = function()
-      vim.cmd("Copilot enable")
-    end,
-  },
+  -- {
+    -- "github/copilot.vim",
+    -- config = function()
+      -- vim.cmd("Copilot enable")
+    -- end,
+  -- },
 
   -- Formatter orchestrator
   {
@@ -106,6 +106,7 @@ vim.opt.ignorecase = true
 -- Navigation
 vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
+vim.opt.mouse = ""
 
 -- Performance
 vim.opt.updatetime = 250
@@ -118,7 +119,7 @@ vim.opt.foldlevel = 99
 vim.opt.foldnestmax = 3
 
 -- Clipboard
-vim.opt.clipboard = { "unnamed", "unnamedplus" }
+-- vim.opt.clipboard = { "unnamed", "unnamedplus" }
 
 -- =====================
 -- Indentation: sensible globals + overrides
@@ -162,3 +163,4 @@ set_indent({ "make" }, { expandtab = false, tabstop = 8, shiftwidth = 8, softtab
 set_indent({ "c", "cpp", "objc", "objcpp", "java", "cs", "rust", "kotlin", "scala" }, {
   expandtab = true, shiftwidth = 4, softtabstop = 4, tabstop = 4,
 })
+
